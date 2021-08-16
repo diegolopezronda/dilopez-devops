@@ -27,9 +27,7 @@ distributed.
 ## Installation ##
 
 ### First Steps ###
-Each step asumes you are in the repository root directory.
 
-* Start the Tools virtual machine with :
-  * `cd tools; vagrant up` 
-* Start the Agent virtual machine with :
-  * `cd puppet; vagrant up` 
+### Installing Virtual Machines ###
+From the repository root directory run:
+  * `cd master; vagrant up; cd ../agent; vagrant up` 
