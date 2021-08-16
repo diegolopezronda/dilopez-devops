@@ -39,7 +39,6 @@ To create the virtual machines, run from the repository root directory:
   * run `vagrant ssh`
 
 #### Notes #####
-* You will need to choose your bridged network interface for both virtual machines.
 * Ignore this error:
 ```
 Vagrant was unable to mount VirtualBox shared folders. This is usually
