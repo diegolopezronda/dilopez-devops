@@ -34,7 +34,7 @@ Vagrant.configure("2") do |config|
 
     # Create a private network, which allows host-only access to the machine
     # using a specific IP.
-    # config.vm.network "private_network", ip: "192.168.33.10"
+    config.vm.network "private_network", ip: "192.168.50.10"
 
     # Create a public network, which generally matched to bridged network.
     # Bridged networks make the machine appear as another physical device on
@@ -121,7 +121,7 @@ Vagrant.configure("2") do |config|
 
     # Create a private network, which allows host-only access to the machine
     # using a specific IP.
-    # config.vm.network "private_network", ip: "192.168.33.10"
+    config.vm.network "private_network", ip: "192.168.33.11"
 
     # Create a public network, which generally matched to bridged network.
     # Bridged networks make the machine appear as another physical device on
@@ -166,7 +166,7 @@ Vagrant.configure("2") do |config|
       /opt/puppetlabs/bin/puppet resource service puppet ensure=running enable=true
       source /etc/profile.d/puppet-agent.sh
       export PATH=/opt/puppetlabs/bin:$PATH
-      puppet config set server dilopezmaster --section main
+      puppet config set server 192.168.33.10 --section main
     SHELL
   end
 end
