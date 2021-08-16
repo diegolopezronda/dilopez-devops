@@ -26,11 +26,9 @@ distributed.
 
 ## Installation ##
 
-### First Steps ###
-
 ### Installing Virtual Machines ###
 From the repository root directory run:
-  * `cd master; vagrant up; cd ../agent; vagrant up` 
+  * `./install.sh` 
 
 #### Notes #####
 * You may need to choose your bridged network interface for both virtual machines.
