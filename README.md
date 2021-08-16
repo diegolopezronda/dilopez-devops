@@ -29,6 +29,7 @@ distributed.
 We are using Vagrant to create virtual machines. There are 2 virtual machines folders with their respective Vagrant files at:
 * /master
 * /agent
+
 To create the virtual machines, run from the repository root directory:
 * `./install.sh` 
 * You will need to choose your bridged network interface for each virtual machine
@@ -36,6 +37,8 @@ To create the virtual machines, run from the repository root directory:
 * Check the status of each virtual machine:
   * Enter the virtual machine folder via terminal
   * run `vagrant ssh`
+
+
 #### Notes #####
 * You will need to choose your bridged network interface for both virtual machines.
 * Ignore this error:
