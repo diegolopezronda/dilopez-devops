@@ -2,5 +2,5 @@
 rm -rf */.vagrant
 cd master
 vagrant up
-cd agent
+cd ../agent
 vagrant up
