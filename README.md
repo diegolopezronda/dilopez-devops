@@ -20,7 +20,7 @@ software installed:
 The following diagrams shows the different tools included and how they are 
 distributed.
 
-![Modules](/docs/images/modules.svg)
+![Modules](/docs/images/tools.svg)
 
 * The APT packages are provisioned on each Vagrant file.
 
