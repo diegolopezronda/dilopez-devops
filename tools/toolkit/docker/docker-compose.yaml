@@ -1,0 +1,16 @@
+services:
+  jenkins: 
+    build: ./dilopez_jenkins 
+    image: jenkins/jenkins:lts-jdk11 
+    ports: 
+      - "8080:8080"
+      - "50000:50000"
+    volumes: 
+      - ./jenkins_home:/var/jenkins_home 
+    links: 
+      - nexus
+  nexus: 
+    build: ./dilopez_nexus 
+    image: sonatype/nexus3:latest
+    ports: 
+      - "8081:8081"
