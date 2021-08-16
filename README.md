@@ -25,14 +25,20 @@ distributed.
 * The APT packages are provisioned on each Vagrant file.
 
 ## Installation ##
-
-### Installing Virtual Machines ###
-From the repository root directory run:
-  * `./install.sh` 
-
+### Creating Virtual Machines ###
+We are using Vagrant to create virtual machines. There are 2 virtual machines folders with their respective Vagrant files at:
+* /master
+* /agent
+To create the virtual machines, run from the repository root directory:
+* `./install.sh` 
+* You will need to choose your bridged network interface for each virtual machine
+  * Please ensure the both interfaces are the same.
+* Check the status of each virtual machine:
+  * Enter the virtual machine folder via terminal
+  * run `vagrant ssh`
 #### Notes #####
-* You may need to choose your bridged network interface for both virtual machines.
-* Don't worry about this error:
+* You will need to choose your bridged network interface for both virtual machines.
+* Ignore this error:
 ```
 Vagrant was unable to mount VirtualBox shared folders. This is usually
 because the filesystem "vboxsf" is not available. This filesystem is
@@ -47,4 +53,3 @@ The error output from the command was:
 
 /sbin/mount.vboxsf: mounting failed with the error: Invalid argument
 ```
-
