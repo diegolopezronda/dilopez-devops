@@ -4,10 +4,8 @@ and orchestrating software as well as monitoring infrastructure.
 
 ## System Requirements ## 
 
-* Unix based operating system
-* 8GB RAM
+* 4GB RAM
 * Virtualization-enabled CPU
-* SSH key configured
 
 ## Dependencies ##
 This development is meant to be deployed on a local machine with the following 
