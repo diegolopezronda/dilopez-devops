@@ -24,9 +24,9 @@ distributed.
 
 ## Installation ##
 ### Creating Virtual Machines ###
-We are using Vagrant to create virtual machines. There are 2 virtual machines folders with their respective Vagrant files at:
-* /master
-* /agent
+We are using Vagrant to create virtual machines. Two virtual machies will be created:
+* master
+* agent
 
 To create the virtual machines, run from the repository root directory:
 * `./install.sh` 
