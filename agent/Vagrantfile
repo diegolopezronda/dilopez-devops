@@ -83,7 +83,6 @@ Vagrant.configure("2") do |config|
 		source /etc/profile.d/puppet-agent.sh
 		export PATH=/opt/puppetlabs/bin:$PATH
 		puppet config set server dilopezmaster --section main
-		puppet ssl bootstrap
 	SHELL
 end
   SHELL
