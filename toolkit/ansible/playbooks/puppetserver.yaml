@@ -21,17 +21,14 @@
     become: true
     tasks:                                                                      
     - name: "Install dependencies"                                              
+      update_cache: true 
       apt:                                                                      
         pkg:                                                                    
         - ruby
         - build-essential                                                       
-        - sed                                                                   
         - openjdk-11-jdk                                                        
-        - wget                                                                  
         - vim                                                                   
         - git                                                                   
-        - net-tools                                                             
-        - iptables                                                              
         state: latest                                                           
     - name: "Download Puppet 7"                                                 
       get_url:                                                                  
@@ -68,11 +65,12 @@
         enabled: true
         state: started
     - name: "Store Facter FQDN"
+      command: /opt/puppetlabs/bin/facter fqdn > /home/vagrant/fqdn
+    - name: "Register Facter FQDN"
       command: /opt/puppetlabs/bin/facter fqdn
-      register: fdqn
+      register: fqdn
     - name: "Copy puppet.conf template"
       template:
-        attributes: fdqn=fdqn.stdout
         src: /home/vagrant/toolkit/puppet/puppetserver.conf
         dest: /etc/puppetlabs/puppet/puppet.conf
   - name: "Install R10K"

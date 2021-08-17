@@ -5,17 +5,14 @@
     become: true
     tasks:                                                                      
     - name: "Install dependencies"                                              
+      update_cache: true 
       apt:                                                                      
         pkg:                                                                    
         - ruby
         - build-essential                                                       
-        - sed                                                                   
         - openjdk-11-jdk                                                        
-        - wget                                                                  
         - vim                                                                   
         - git                                                                   
-        - net-tools                                                             
-        - iptables                                                              
         state: latest                                                           
     - name: "Download Puppet 7"                                                 
       get_url:                                                                  
@@ -25,17 +22,17 @@
       apt:                                                                      
         deb: /root/puppet7-release-focal.deb                                    
         state: present                                                          
-  - name: "Get FQDN"
-    hosts: localhost
-    connection: local
-    become: true
-    - name: "Store Facter FQDN"
-      command: /opt/puppetlabs/bin/facter fqdn
-      register: fdqn
   - name: "Configure Puppet Agent"
     hosts: 192.168.50.11
     become: true
     tasks:
+    - name: "Copy Master FQDN"
+      copy:
+        src: /home/vagrant/fqdn
+        dest: /home/vagrant/fqdn
+    - name: "Create FQDN Variable"
+      command: echo /home/vagrant/fqdn
+        register: fqdn
     - name: "Install Puppet Agent"
       apt:
         update_cache: true 
@@ -44,7 +41,6 @@
         state: present
     - name: "Copy puppet.conf template"
       template:
-        attributes: fdqn=fdqn.stdout
         src: /home/vagrant/toolkit/puppet/puppetagent.conf
         dest: /etc/puppetlabs/puppet/puppet.conf
     - name: "Ensure Puppet Agent is running"
