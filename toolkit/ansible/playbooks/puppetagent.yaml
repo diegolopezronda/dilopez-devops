@@ -1,18 +1,51 @@
 ---
-  - include: puppet.yml
+  #https://puppet.com/docs/puppet/7/server/install_from_packages.html
+  - name: "Configure Puppet"                                             
+    hosts: 192.168.50.11
+    become: true
+    tasks:                                                                      
+    - name: "Install dependencies"                                              
+      apt:                                                                      
+        pkg:                                                                    
+        - ruby
+        - build-essential                                                       
+        - sed                                                                   
+        - openjdk-11-jdk                                                        
+        - wget                                                                  
+        - vim                                                                   
+        - git                                                                   
+        - net-tools                                                             
+        - iptables                                                              
+        state: latest                                                           
+    - name: "Download Puppet 7"                                                 
+      get_url:                                                                  
+        url: https://apt.puppet.com/puppet7-release-focal.deb                   
+        dest: /root/puppet7-release-focal.deb                                   
+    - name: "Enable Puppet APT"                                                 
+      apt:                                                                      
+        deb: /root/puppet7-release-focal.deb                                    
+        state: present                                                          
+  - name: "Get FQDN"
+    hosts: localhost
+    connection: local
+    become: true
+    - name: "Store Facter FQDN"
+      command: /opt/puppetlabs/bin/facter fqdn
+      register: fdqn
   - name: "Configure Puppet Agent"
-    hosts: 192.168.50.10
+    hosts: 192.168.50.11
     become: true
     tasks:
     - name: "Install Puppet Agent"
       apt:
         update_cache: true 
-				pkg:
+        pkg:
           - puppet-agent
-				state: present
+        state: present
     - name: "Copy puppet.conf template"
-      copy:
-        src: /home/vagrant/toolkit/puppetagent.conf
+      template:
+        attributes: fdqn=fdqn.stdout
+        src: /home/vagrant/toolkit/puppet/puppetagent.conf
         dest: /etc/puppetlabs/puppet/puppet.conf
-    - name: "Ensure Puppet Server is running"
+    - name: "Ensure Puppet Agent is running"
       command: /opt/puppetlabs/bin/puppet resource service puppet ensure=running enable=true

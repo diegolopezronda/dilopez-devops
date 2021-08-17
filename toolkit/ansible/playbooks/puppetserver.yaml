@@ -1,47 +1,94 @@
 ---
-  - include: puppet.yml
   #https://puppet.com/docs/puppet/7/server/install_from_packages.html
+  - name: "Configure SSH"
+    hosts: localhost
+    connection: local
+    become: true
+    tasks:
+    - name: "Copy SSH Config"
+      copy:
+        src: /home/vagrant/toolkit/ansible/ssh-config
+        dest: /home/vagrant/.ssh/config
+        mode: 0600
+    - name: "Copy SSH Config"
+      copy:
+        src: /home/vagrant/toolkit/ansible/ssh-config
+        dest: /root/.ssh/config
+        mode: 0600
+  - name: "Configure Puppet"                                             
+    hosts: localhost
+    connection: local
+    become: true
+    tasks:                                                                      
+    - name: "Install dependencies"                                              
+      apt:                                                                      
+        pkg:                                                                    
+        - ruby
+        - build-essential                                                       
+        - sed                                                                   
+        - openjdk-11-jdk                                                        
+        - wget                                                                  
+        - vim                                                                   
+        - git                                                                   
+        - net-tools                                                             
+        - iptables                                                              
+        state: latest                                                           
+    - name: "Download Puppet 7"                                                 
+      get_url:                                                                  
+        url: https://apt.puppet.com/puppet7-release-focal.deb                   
+        dest: /root/puppet7-release-focal.deb                                   
+    - name: "Enable Puppet APT"                                                 
+      apt:                                                                      
+        deb: /root/puppet7-release-focal.deb                                    
+        state: present                                                          
   - name: "Configure Puppet Master"
-    hosts: 192.168.50.10
+    hosts: localhost
+    connection: local
     become: true
     tasks:
     - name: "Install Puppet Server"
       apt:
         update_cache: true 
-				pkg:
+        pkg:
           - puppetserver
-				state: present
-    - name: "Update FQDN on puppetserver.conf"
-      command: sed -i "s/server = dilopezmaster/server = $(facter fqdn)/g" /home/vagrant/toolkit/puppetserver.conf
-    - name: "Update FQDN on puppetagent.conf"
-      command: sed -i "s/server = dilopezmaster/server = $(facter fqdn)/g" /home/vagrant/toolkit/puppetagent.conf
-    - name: "Copy puppet.conf template"
-      copy:
-        src: /home/vagrant/toolkit/puppetserver.conf
-        dest: /etc/puppetlabs/puppet/puppet.conf
+        state: present
     - name: "Reduce JVM Minimum RAM"
-      command: sed -i 's/Xms2g/Xms256m/g' /etc/default/puppetserver
+      replace:
+        path: /etc/default/puppetserver
+        regexp: 'Xms2g'
+        replace: "Xms256m"
     - name: "Reduce JVM Maximum RAM"
-      command: sed -i 's/Xmx2g/Xmx1g/g' /etc/default/puppetserver
+      replace:
+        path: /etc/default/puppetserver
+        regexp: 'Xmx2g'
+        replace: "Xmx1g"
     - name: "Ensure Puppet Server is running"
       systemd:
         name: puppetserver
         enabled: true
         state: started
+    - name: "Store Facter FQDN"
+      command: /opt/puppetlabs/bin/facter fqdn
+      register: fdqn
+    - name: "Copy puppet.conf template"
+      template:
+        attributes: fdqn=fdqn.stdout
+        src: /home/vagrant/toolkit/puppet/puppetserver.conf
+        dest: /etc/puppetlabs/puppet/puppet.conf
   - name: "Install R10K"
-    hosts: 192.168.50.10
+    hosts: localhost
+    connection: local
     become: true
-    environment:
-      PATH: $PATH:/opt/puppetlabs/puppet/bin
     tasks:
       - name: "Install R10K"
-        community.general.gem:
+        gem:
           name: r10k
           state: present
-      - name: "Create r10k folder"
-        file: /etc/puppetlabs/r10k
-          ensure: directory
+      - name: "Create r10k folder" 
+        file: 
+          path: /etc/puppetlabs/r10k 
+          state: directory 
       - name: "Copy r10k.yaml template"
         copy:
-          src: /home/vagrant/toolkit/r10k.yaml
+          src: /home/vagrant/toolkit/puppet/r10k.yaml
           dest: /etc/puppetlabs/r10k/r10k.yaml
