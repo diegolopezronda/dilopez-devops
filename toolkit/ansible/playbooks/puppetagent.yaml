@@ -5,8 +5,8 @@
     become: true
     tasks:                                                                      
     - name: "Install dependencies"                                              
-      update_cache: true 
       apt:                                                                      
+        update_cache: true 
         pkg:                                                                    
         - ruby
         - build-essential                                                       
@@ -32,7 +32,7 @@
         dest: /home/vagrant/fqdn
     - name: "Create FQDN Variable"
       command: echo /home/vagrant/fqdn
-        register: fqdn
+      register: fqdn
     - name: "Install Puppet Agent"
       apt:
         update_cache: true 

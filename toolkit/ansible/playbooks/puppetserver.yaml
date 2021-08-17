@@ -15,29 +15,29 @@
         src: /home/vagrant/toolkit/ansible/ssh-config
         dest: /root/.ssh/config
         mode: 0600
-  - name: "Configure Puppet"                                             
+  - name: "Configure Puppet" 
     hosts: localhost
     connection: local
     become: true
-    tasks:                                                                      
-    - name: "Install dependencies"                                              
-      update_cache: true 
-      apt:                                                                      
-        pkg:                                                                    
+    tasks:
+    - name: "Install dependencies"
+      apt:
+        update_cache: true 
+        pkg:
         - ruby
-        - build-essential                                                       
-        - openjdk-11-jdk                                                        
-        - vim                                                                   
-        - git                                                                   
-        state: latest                                                           
-    - name: "Download Puppet 7"                                                 
-      get_url:                                                                  
-        url: https://apt.puppet.com/puppet7-release-focal.deb                   
-        dest: /root/puppet7-release-focal.deb                                   
-    - name: "Enable Puppet APT"                                                 
-      apt:                                                                      
-        deb: /root/puppet7-release-focal.deb                                    
-        state: present                                                          
+        - build-essential 
+        - openjdk-11-jdk
+        - vim 
+        - git 
+        state: latest 
+    - name: "Download Puppet 7" 
+      get_url:
+        url: https://apt.puppet.com/puppet7-release-focal.deb 
+        dest: /root/puppet7-release-focal.deb 
+    - name: "Enable Puppet APT" 
+      apt:
+        deb: /root/puppet7-release-focal.deb
+        state: present
   - name: "Configure Puppet Master"
     hosts: localhost
     connection: local
@@ -78,15 +78,15 @@
     connection: local
     become: true
     tasks:
-      - name: "Install R10K"
-        gem:
-          name: r10k
-          state: present
-      - name: "Create r10k folder" 
-        file: 
-          path: /etc/puppetlabs/r10k 
-          state: directory 
-      - name: "Copy r10k.yaml template"
-        copy:
-          src: /home/vagrant/toolkit/puppet/r10k.yaml
-          dest: /etc/puppetlabs/r10k/r10k.yaml
+    - name: "Install R10K"
+      gem:
+        name: r10k
+        state: present
+    - name: "Create r10k folder" 
+      file: 
+        path: /etc/puppetlabs/r10k 
+        state: directory 
+    - name: "Copy r10k.yaml template"
+      copy:
+        src: /home/vagrant/toolkit/puppet/r10k.yaml
+        dest: /etc/puppetlabs/r10k/r10k.yaml
