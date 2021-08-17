@@ -1,0 +1,47 @@
+---
+  - include: puppet.yml
+  #https://puppet.com/docs/puppet/7/server/install_from_packages.html
+  - name: "Configure Puppet Master"
+    hosts: 192.168.50.10
+    become: true
+    tasks:
+    - name: "Install Puppet Server"
+      apt:
+        update_cache: true 
+				pkg:
+          - puppetserver
+				state: present
+    - name: "Update FQDN on puppetserver.conf"
+      command: sed -i "s/server = dilopezmaster/server = $(facter fqdn)/g" /home/vagrant/toolkit/puppetserver.conf
+    - name: "Update FQDN on puppetagent.conf"
+      command: sed -i "s/server = dilopezmaster/server = $(facter fqdn)/g" /home/vagrant/toolkit/puppetagent.conf
+    - name: "Copy puppet.conf template"
+      copy:
+        src: /home/vagrant/toolkit/puppetserver.conf
+        dest: /etc/puppetlabs/puppet/puppet.conf
+    - name: "Reduce JVM Minimum RAM"
+      command: sed -i 's/Xms2g/Xms256m/g' /etc/default/puppetserver
+    - name: "Reduce JVM Maximum RAM"
+      command: sed -i 's/Xmx2g/Xmx1g/g' /etc/default/puppetserver
+    - name: "Ensure Puppet Server is running"
+      systemd:
+        name: puppetserver
+        enabled: true
+        state: started
+  - name: "Install R10K"
+    hosts: 192.168.50.10
+    become: true
+    environment:
+      PATH: $PATH:/opt/puppetlabs/puppet/bin
+    tasks:
+      - name: "Install R10K"
+        community.general.gem:
+          name: r10k
+          state: present
+      - name: "Create r10k folder"
+        file: /etc/puppetlabs/r10k
+          ensure: directory
+      - name: "Copy r10k.yaml template"
+        copy:
+          src: /home/vagrant/toolkit/r10k.yaml
+          dest: /etc/puppetlabs/r10k/r10k.yaml

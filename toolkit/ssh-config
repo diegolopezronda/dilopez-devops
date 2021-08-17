@@ -1,2 +1,4 @@
+Host 192.168.50.11
+    StrictHostKeyChecking no
 Host github.com
     StrictHostKeyChecking no

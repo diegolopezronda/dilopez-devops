@@ -1,0 +1,18 @@
+---
+  - include: puppet.yml
+  - name: "Configure Puppet Agent"
+    hosts: 192.168.50.10
+    become: true
+    tasks:
+    - name: "Install Puppet Agent"
+      apt:
+        update_cache: true 
+				pkg:
+          - puppet-agent
+				state: present
+    - name: "Copy puppet.conf template"
+      copy:
+        src: /home/vagrant/toolkit/puppetagent.conf
+        dest: /etc/puppetlabs/puppet/puppet.conf
+    - name: "Ensure Puppet Server is running"
+      command: /opt/puppetlabs/bin/puppet resource service puppet ensure=running enable=true

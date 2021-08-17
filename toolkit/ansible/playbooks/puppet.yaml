@@ -1,0 +1,26 @@
+---                                                                             
+  #https://puppet.com/docs/puppet/7/server/install_from_packages.html           
+  - name: "Configure Puppet"                                             
+    hosts: vagrant                                                        
+    become: true                                                                
+    tasks:                                                                      
+    - name: "Install dependencies"                                              
+      apt:                                                                      
+        pkg:                                                                    
+        - build-essential                                                       
+        - sed                                                                   
+        - openjdk-11-jdk                                                        
+        - wget                                                                  
+        - vim                                                                   
+        - git                                                                   
+        - net-tools                                                             
+        - iptables                                                              
+        state: latest                                                           
+    - name: "Download Puppet 7"                                                 
+      get_url:                                                                  
+        url: https://apt.puppet.com/puppet7-release-focal.deb                   
+        dest: /root/puppet7-release-focal.deb                                   
+    - name: "Enable Puppet APT"                                                 
+      apt:                                                                      
+        deb: /root/puppet7-release-focal.deb                                    
+        state: present                                                          

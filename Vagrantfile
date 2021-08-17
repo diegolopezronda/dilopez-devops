@@ -34,7 +34,7 @@ Vagrant.configure("2") do |config|
 
     # Create a private network, which allows host-only access to the machine
     # using a specific IP.
-    config.vm.network "private_network", ip: "192.168.50.10"
+    master.vm.network "private_network", ip: "192.168.50.10"
 
     # Create a public network, which generally matched to bridged network.
     # Bridged networks make the machine appear as another physical device on
@@ -68,32 +68,12 @@ Vagrant.configure("2") do |config|
     # documentation for more information about their specific syntax and use.
     master.vm.provision "file", source: "./toolkit", destination: "/home/vagrant/toolkit"
     master.vm.provision "shell", inline: <<-SHELL
+      # ANSIBLE
       apt update
       apt upgrade -y
-      apt install -y build-essential sed openjdk-11-jdk wget vim git net-tools iptables ansible
-      # ANSIBLE
-      cp /home/vagrant/toolkit/ansible/ansible.cfg /etc/ansible/ansible.cfg
-      # PUPPET
-      # https://puppet.com/docs/puppet/7/server/install_from_packages.html
-      wget https://apt.puppet.com/puppet7-release-focal.deb
-      dpkg -i puppet7-release-focal.deb
-      apt update
-      apt-get install -y puppetserver
-      cat /home/vagrant/toolkit/puppet.conf >> /etc/puppetlabs/puppet/puppet.conf 
-      sed -i 's/Xms2g/Xms256m/g' /etc/default/puppetserver
-      sed -i 's/Xmx2g/Xmx1g/g' /etc/default/puppetserver
-      systemctl start puppetserver
-      systemctl enable puppetserver
-      # R10K
-      echo "PATH=$PATH:/opt/puppetlabs/puppet/bin" >> /home/vagrant/.profile
-      echo "PATH=$PATH:$HOME/bin" >> /home/vagrant/.profile
-      source /home/vagrant/.profile	
-      sed -i '/mesg/i PATH=$PATH:/opt/puppetlabs/puppet/bin' /root/.profile
-      sed -i '/mesg/i PATH=$PATH:$HOME/bin' /root/.profile
-      source /root/.profile	
-      gem install r10k
-      mkdir /etc/puppetlabs/r10k
-      cp /home/vagrant/toolkit/r10k.yaml /etc/puppetlabs/r10k/r10k.yaml
+      apt install -y ansible
+      cp /home/vagrant/toolkit/ansible/hosts /etc/ansible/hosts
+			ansible-playbook /home/vagrant/toolkit/ansible/playbooks/puppetserver.yaml
     SHELL
   end
 
@@ -121,7 +101,7 @@ Vagrant.configure("2") do |config|
 
     # Create a private network, which allows host-only access to the machine
     # using a specific IP.
-    config.vm.network "private_network", ip: "192.168.33.11"
+    agent.vm.network "private_network", ip: "192.168.50.11"
 
     # Create a public network, which generally matched to bridged network.
     # Bridged networks make the machine appear as another physical device on
@@ -154,19 +134,18 @@ Vagrant.configure("2") do |config|
     # Ansible, Chef, Docker, Puppet and Salt are also available. Please see the
     # documentation for more information about their specific syntax and use.
     agent.vm.provision "shell", inline: <<-SHELL
-      apt update
-      apt upgrade -y
-      apt install -y build-essential openjdk-11-jdk wget vim git net-tools iptables
-      # PUPPET
-      # https://puppet.com/docs/puppet/7/install_agents.html
-      wget https://apt.puppet.com/puppet7-release-focal.deb
-      dpkg -i puppet7-release-focal.deb
-      apt update
-      apt install -y puppet-agent
-      /opt/puppetlabs/bin/puppet resource service puppet ensure=running enable=true
-      source /etc/profile.d/puppet-agent.sh
-      export PATH=/opt/puppetlabs/bin:$PATH
-      puppet config set server 192.168.33.10 --section main
+      # Faking ssh-copy-id from the agent, 
+      # so we can apply the master's Ansible playbooks.
+      ssh-keyscan 192.168.50.10 > /home/vagrant/keys
+      sed -i 's/192.168.50.10 //g' /home/vagrant/keys
+      sed -i 's/=/= vagrant@dilopezmaster/g' /home/vagrant/keys
+      cat /home/vagrant/keys >> /home/vagrant/.ssh/authorized_keys
+      rm /home/vagrant/keys
+      ssh-keyscan 192.168.50.10 > /home/vagrant/keys
+      sed -i 's/192.168.50.10 //g' /home/vagrant/keys
+      sed -i 's/=/= root@dilopezmaster/g' /home/vagrant/keys
+      cat /home/vagrant/keys >> /home/vagrant/.ssh/authorized_keys
+      rm /home/vagrant/keys
     SHELL
   end
 end
