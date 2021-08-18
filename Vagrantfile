@@ -73,7 +73,7 @@ Vagrant.configure("2") do |config|
       apt upgrade -y
       apt install -y ansible
       cp /home/vagrant/toolkit/ansible/hosts /etc/ansible/hosts
-			ansible-playbook /home/vagrant/toolkit/ansible/playbooks/puppetserver.yaml
+			ansible-playbook /home/vagrant/toolkit/ansible/playbooks/master.yaml
     SHELL
   end
 
