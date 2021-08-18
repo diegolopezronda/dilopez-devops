@@ -32,6 +32,6 @@ To create the virtual machines, run from the repository root directory:
 * `./install.sh` 
 * You will need to choose your bridged network interface for each virtual machine
   * Please ensure the both interfaces are the same.
-* After the installation is finished, your should be able to access to the virtual machines:
-  * Enter the virtual machine folder via terminal
-  * run `vagrant ssh`
+* After the installation is finished, your should be able to access to the virtual machines via SSH:
+  * Master `vagrant ssh master`
+  * Agent `vagrant ssh agent`

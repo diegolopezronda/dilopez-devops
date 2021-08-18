@@ -28,7 +28,12 @@
         - build-essential 
         - openjdk-11-jdk
         - vim 
-        - git 
+        - git
+        - docker
+        - docker-compose
+        - wget
+        - net-tools
+        - iptables 
         state: latest 
     - name: "Download Puppet 7" 
       get_url:
@@ -59,11 +64,15 @@
         path: /etc/default/puppetserver
         regexp: 'Xmx2g'
         replace: "Xmx1g"
+    - name: "Configure puppet CA"
+      copy:
+        src: /home/vagrant/toolkit/puppet/ca.conf
+        dest: /etc/puppetlabs/puppetserver/conf.d/ca.conf
     - name: "Ensure Puppet Server is running"
       systemd:
         name: puppetserver
         enabled: true
-        state: started
+        state: restarted
     - name: "Register Facter FQDN"
       command: /opt/puppetlabs/bin/facter fqdn
       register: fqdn
@@ -79,8 +88,6 @@
       lineinfile: 
         path: /root/.bashrc
         line: export PATH={$PATH}:/opt/puppetlabs/bin
-    - name: "Commit environment variables"
-      command: source /root/.bashrc
     - name: "Register Facter Domain"
       command: /opt/puppetlabs/bin/facter domain
       register: domain

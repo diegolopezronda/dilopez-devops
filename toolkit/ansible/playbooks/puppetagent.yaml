@@ -27,9 +27,9 @@
     become: true
     tasks:
     - name: "Add environment variables"
-      command: echo "export PATH={$PATH}:/opt/puppetlabs/bin" >> /root/.bashrc
-    - name: "Commit environment variables"
-      command: source /root/.bashrc
+      lineinfile:
+        path: /root/.bashrc
+        line: export PATH={$PATH}:/opt/puppetlabs/bin
     - name: "Copy Master FQDN"
       copy:
         src: /home/vagrant/fqdn
@@ -72,3 +72,14 @@
         path: /etc/hosts
         line: 192.168.50.11 dilopezagent dilopezagent
       when: domain.stdout == ""
+    - name: "Puppet Agent Handshake"
+      command: /opt/puppetlabs/bin/puppet ssl bootstrap
+      async: 45
+      poll: 0
+  - name: "Puppet Server Handshake"
+    hosts: localhost
+    connection: local
+    become: true
+    tasks:
+      - name: "Puppet Server Handshake"
+        command: /opt/puppetlabs/bin/puppetserver ca sign --all
