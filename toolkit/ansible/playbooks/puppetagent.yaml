@@ -26,12 +26,16 @@
     hosts: 192.168.50.11
     become: true
     tasks:
+    - name: "Add environment variables"
+      command: echo "export PATH={$PATH}:/opt/puppetlabs/bin" >> /root/.bashrc
+    - name: "Commit environment variables"
+      command: source /root/.bashrc
     - name: "Copy Master FQDN"
       copy:
         src: /home/vagrant/fqdn
         dest: /home/vagrant/fqdn
     - name: "Create FQDN Variable"
-      command: echo /home/vagrant/fqdn
+      command: cat /home/vagrant/fqdn
       register: fqdn
     - name: "Install Puppet Agent"
       apt:
@@ -45,3 +49,26 @@
         dest: /etc/puppetlabs/puppet/puppet.conf
     - name: "Ensure Puppet Agent is running"
       command: /opt/puppetlabs/bin/puppet resource service puppet ensure=running enable=true
+    - name: "Register Facter Domain"
+      command: /opt/puppetlabs/bin/facter domain
+      register: domain
+    - name: "Add Puppet Server Line on /etc/hosts"
+      lineinfile:
+        path: /etc/hosts
+        line: 192.168.50.10 dilopezmaster.{{domain.stdout}} dilopezmaster.{{domain.stdout}}
+      when: domain.stdout != ""
+    - name: "Add Puppet Server Line on /etc/hosts"
+      lineinfile:
+        path: /etc/hosts
+        line: 192.168.50.10 dilopezmaster dilopezmaster
+      when: domain.stdout == ""
+    - name: "Add Puppet Agent Line on /etc/hosts"
+      lineinfile:
+        path: /etc/hosts
+        line: 192.168.50.11 dilopezagent.{{domain.stdout}} dilopezagent.{{domain.stdout}}
+      when: domain.stdout != ""
+    - name: "Add Puppet Agent Line on /etc/hosts"
+      lineinfile:
+        path: /etc/hosts
+        line: 192.168.50.11 dilopezagent dilopezagent
+      when: domain.stdout == ""
