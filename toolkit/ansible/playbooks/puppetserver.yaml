@@ -29,8 +29,6 @@
         - openjdk-11-jdk
         - vim 
         - git
-        - docker
-        - docker-compose
         - wget
         - net-tools
         - iptables 
@@ -63,7 +61,7 @@
       replace:
         path: /etc/default/puppetserver
         regexp: 'Xmx2g'
-        replace: "Xmx1g"
+        replace: "Xmx256m"
     - name: "Configure puppet CA"
       copy:
         src: /home/vagrant/toolkit/puppet/ca.conf

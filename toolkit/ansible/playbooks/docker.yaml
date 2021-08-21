@@ -1,2 +1,48 @@
 ---
-
+    #https://docs.docker.com/engine/install/ubuntu/
+  - name: "Install Docker"
+    hosts: localhost
+    connection: local
+    become: true
+    tasks:
+    - name: "Install dependencies"
+      apt:
+        update_cache: true
+        state: latest
+        pkg:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - gnupg
+        - lsb-release
+    - name: "Download GPG Key"
+      get_url:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        dest: /root/docker-archive-keyring.gpg
+    - name: "Sign GPG Key"
+      command: gpg --batch --yes --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg /root/docker-archive-keyring.gpg    
+    - name: "Add Repository"
+      copy:
+        dest: /etc/apt/sources.list.d/docker.list
+        content: deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu focal stable
+    - name: "Install"
+      apt:
+        update_cache: true
+        pkg:
+        - docker-ce 
+        - docker-ce-cli 
+        - containerd.io
+    #https://docs.docker.com/compose/install/
+  - name: "Install Docker Compose"
+    hosts: localhost
+    connection: local
+    become: true
+    tasks:
+    - name: "Install"
+      get_url:
+        url: https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64
+        dest: /usr/local/bin/docker-compose
+    - name: "Change Mode"
+      file:
+        path: /usr/local/bin/docker-compose
+        mode: a+x
