@@ -3,7 +3,7 @@ services:
     build: ./dilopez_jenkins 
     image: jenkins/jenkins:lts-jdk11 
     networks:
-    - jenkins_network
+    - devops_network
     ports: 
       - "8080:8080"
       - "50000:50000"
@@ -18,14 +18,25 @@ services:
     build: ./dilopez_nexus 
     image: sonatype/nexus3:latest
     networks:
-    - jenkins_network
+    - devops_network
     ports: 
       - "8081:8081"
     volumes:
       - nexus-data:/nexus-datai
+  rundeck:
+    image: rundeck/rundeck
+    network:
+    - devops_network
+    ports: 
+      - "4440:4440"
+      - "4443:4443"
+    deploy:
+      resources:
+        limits:
+          memory: 1G
 volumes:
   jenkins_home:
   nexus-data:
 networks:
-  jenkins_network:
+  devops_network:
     driver: bridge
