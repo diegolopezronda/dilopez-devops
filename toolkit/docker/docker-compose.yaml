@@ -2,22 +2,30 @@ services:
   jenkins: 
     build: ./dilopez_jenkins 
     image: jenkins/jenkins:lts-jdk11 
+    networks:
+    - jenkins_network
     ports: 
       - "8080:8080"
       - "50000:50000"
     volumes: 
-      - ./jenkins_home:/var/jenkins_home 
+      - jenkins_home:/var/jenkins_home 
       - /var/run/docker.sock:/var/run/docker.sock 
-    environment:
-      - JAVA_ARGS=-Xms256m -Xms256m -XX:MaxDirectMemorySize=256m -Djava.awt.headless=true
-    links: 
-      - nexus
+    deploy:
+      resources:
+        limits:
+          memory: 1G
   nexus: 
     build: ./dilopez_nexus 
     image: sonatype/nexus3:latest
+    networks:
+    - jenkins_network
     ports: 
       - "8081:8081"
     volumes:
-      - ./nexus-data:/nexus-data
-    environment:
-      - INSTALL4J_ADD_VM_PARAMS=-Xms256m -Xmx256m -XX:MaxDirectMemorySize=256m -Djava.util.prefs.userRoot=${NEXUS_DATA}/javaprefs
+      - nexus-data:/nexus-datai
+volumes:
+  jenkins_home:
+  nexus-data:
+networks:
+  jenkins_network:
+    driver: bridge
