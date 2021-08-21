@@ -68,10 +68,11 @@ Vagrant.configure("2") do |config|
     # documentation for more information about their specific syntax and use.
     master.vm.provision "file", source: "./toolkit", destination: "/home/vagrant/toolkit"
     master.vm.provision "shell", inline: <<-SHELL
-      # ANSIBLE
+      #https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-ansible-on-ubuntu
       apt update
-      apt upgrade -y
-      apt install -y ansible
+      apt install software-properties-common
+      add-apt-repository --yes --update ppa:ansible/ansible
+      apt install ansible
       cp /home/vagrant/toolkit/ansible/hosts /etc/ansible/hosts
 			ansible-playbook /home/vagrant/toolkit/ansible/playbooks/master.yaml
     SHELL

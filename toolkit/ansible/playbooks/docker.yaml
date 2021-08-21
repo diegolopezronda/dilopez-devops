@@ -33,12 +33,7 @@
         - docker-ce-cli 
         - containerd.io
     #https://docs.docker.com/compose/install/
-  - name: "Install Docker Compose"
-    hosts: localhost
-    connection: local
-    become: true
-    tasks:
-    - name: "Install"
+    - name: "Install Docker Compose"
       get_url:
         url: https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64
         dest: /usr/local/bin/docker-compose
@@ -46,3 +41,11 @@
       file:
         path: /usr/local/bin/docker-compose
         mode: a+x
+    - name: "Run docker Compose"
+      docker_compose:
+        project_name: devops
+        project_src: /home/vagrant/toolkit/docker
+        build: true
+        detach: true
+        remove_orphans: true
+        state: present  
