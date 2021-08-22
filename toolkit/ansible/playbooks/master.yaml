@@ -1,3 +1,0 @@
----
-  - import_playbook: puppetserver.yaml
-  - import_playbook: docker.yaml
