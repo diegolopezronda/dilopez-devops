@@ -4,12 +4,10 @@ This repo contains an Ubuntu 20.04 LTS Vagrantfile.
 ## Virtual Machine Environment Instructions ##
 
 ### System Requirements ###
-
 * Virtualization-enabled CPU
 * 1GB RAM available for virtualization
 
 ### Dependencies ###
-
 * VirtualBox
 * Vagrant 
 
