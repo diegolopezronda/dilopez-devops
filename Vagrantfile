@@ -16,6 +16,10 @@ Vagrant.configure("2") do |config|
     master.vm.provider "virtualbox" do |vb|
       vb.memory = "1024"
     end
+    # Copy the toolchain directory into the virtual machine
+    master.vm.provision "file", 
+      source: "./toolchain", 
+      destination: "/home/vagrant/toolchain"
     # Provision your machine here
     # You can use shell commands like apt, cd, mv, mkdir, etc.
     master.vm.provision "shell", inline: <<-SHELL
@@ -25,6 +29,10 @@ Vagrant.configure("2") do |config|
       apt install -y software-properties-common
       add-apt-repository --yes --update ppa:ansible/ansible
       apt install -y ansible
+      # Moving toolchain to /opt
+      mv /home/vagrant/toolchain /opt/toolchain
+      # Configuring Ansible
+      cp /opt/toolchain/ansible/hosts /etc/ansible/hosts
     SHELL
   end
 end
