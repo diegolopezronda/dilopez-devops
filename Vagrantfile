@@ -19,7 +19,12 @@ Vagrant.configure("2") do |config|
     # Provision your machine here
     # You can use shell commands like apt, cd, mv, mkdir, etc.
     master.vm.provision "shell", inline: <<-SHELL
-      # Your commands here
+      # Installing Ansible
+      # https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-ansible-on-ubuntu
+      apt update
+      apt install -y software-properties-common
+      add-apt-repository --yes --update ppa:ansible/ansible
+      apt install -y ansible
     SHELL
   end
 end
