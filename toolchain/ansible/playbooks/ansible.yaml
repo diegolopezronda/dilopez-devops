@@ -1,0 +1,18 @@
+---
+  - name: "Install ansible"
+    hosts: master
+    become: true
+    tasks:
+    - name: "Installing dependendcies"
+      apt:
+       update_cache: true
+       pkg:
+       - software-properties-common
+    - name: "Adding PPA"
+      apt_repository:
+        repo: "ppa:ansible/ansible"
+    - name: "Installing Ansible"
+      apt:
+       update_cache: true
+       pkg:
+       - ansible

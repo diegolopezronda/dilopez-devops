@@ -1,2 +1,3 @@
 ---
   - import_playbook: vim.yaml
+  - import_playbook: ansible.yaml
