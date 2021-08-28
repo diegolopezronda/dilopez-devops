@@ -14,13 +14,8 @@ Vagrant.configure("2") do |config|
     master.vm.synced_folder '.', '/vagrant', disabled: true
     # The RAM of the Virtual Machine is 1Gb
     master.vm.provider "virtualbox" do |vb|
-      vb.memory = "4096"
+      vb.memory = "1024"
     end
-    # The directory toolchain of the repository will be copied 
-    # to the home of the  of the virtual machine
-    master.vm.provision "file", 
-      source: "./toolchain", 
-      destination: "/home/vagrant/toolchain"
     # Provision your machine here
     # You can use shell commands like apt, cd, mv, mkdir, etc.
     master.vm.provision "shell", inline: <<-SHELL
