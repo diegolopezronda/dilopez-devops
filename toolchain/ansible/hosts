@@ -2,7 +2,7 @@
 # List of master nodes
 [master]
 # Localhost connects with itself without using SSH
-localhost ansible_connection: local
+localhost ansible_connection=local
 
 # This configuration applies to all nodes.
 [all:vars]
