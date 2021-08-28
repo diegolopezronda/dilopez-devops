@@ -1,0 +1,19 @@
+---
+  - name: "Installing and configuring Vim"
+    hosts: master
+    become: true
+    tasks:
+    - name: "Installing last version of vim"
+      apt:
+        update_cache: true
+        pkg:
+        - vim
+        state: latest
+    - name: "Adding Molokai Theme"
+      copy:
+        src: ../../vim/molokai.vim
+        dest: /usr/share/vim/vim81/colors/molokai.vim
+    - name: "Adding Vim Runtime Configuration"
+      copy:
+        src: ../../vim/vimrc
+        dest: /etc/vim/vimrc.local

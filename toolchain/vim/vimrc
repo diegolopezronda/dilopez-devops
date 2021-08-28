@@ -1,0 +1,11 @@
+"Enables color according to syntax
+syntax on
+"Shows line numbers
+set nu
+"Set tab to two spaces
+set tabstop=2
+"Draws a vertical line on column 80
+set colorcolumn=80
+"Set the theme to Molokai
+colorscheme molokai
+
