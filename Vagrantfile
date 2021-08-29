@@ -35,6 +35,8 @@ Vagrant.configure("2") do |config|
       cp /opt/toolchain/ansible/hosts /etc/ansible/hosts
       # Ansible takes over
       ansible-playbook /opt/toolchain/ansible/playbooks/master.yaml
+      # Clean-up
+      rm -rf /opt/toolchain
     SHELL
   end
 end

@@ -1,0 +1,15 @@
+---
+  - name: "Get Toolchain Repository"
+    hosts: master
+    become: true
+    tasks:
+    - name: Install Git
+      apt:
+        update_cache: true
+        pkg:
+          - git
+        state: latest
+    - name: Clone Repository
+      git:
+        repo: https://github.com/diegolopezronda/dilopez-devops.git
+        dest: /opt/dilopez-devops
