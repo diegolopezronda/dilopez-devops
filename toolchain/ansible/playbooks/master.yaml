@@ -2,3 +2,4 @@
   - import_playbook: vim.yaml
   - import_playbook: ansible.yaml
   - import_playbook: toolchain.yaml
+  - import_playbook: docker.yaml
