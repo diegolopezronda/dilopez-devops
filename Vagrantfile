@@ -14,7 +14,7 @@ Vagrant.configure("2") do |config|
     master.vm.synced_folder '.', '/vagrant', disabled: true
     # The RAM of the Virtual Machine is 1Gb
     master.vm.provider "virtualbox" do |vb|
-      vb.memory = "1024"
+      vb.memory = "4096"
     end
     # Copy the toolchain directory into the virtual machine
     master.vm.provision "file", 

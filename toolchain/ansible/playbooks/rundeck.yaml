@@ -1,0 +1,51 @@
+---
+  - name: "Install Rundeck"
+    hosts: master
+    become: true
+    environment:
+      RD_URL: "http://{{ ansible_all_ipv4_addresses[0] | string }}:4440"
+    tasks:
+    - name: "Installing Java"
+      apt:
+        update_cache: true
+        pkg:
+        - openjdk-11-jre-headless
+        state: latest
+    - name: "Importing the repo signing key"
+      apt_key:
+        url: https://packages.rundeck.com/pagerduty/rundeck/gpgkey
+        state: present
+    - name: "Adding repository"
+      copy:
+        src: ../../rundeck/rundeck.list
+        dest: /etc/apt/sources.list.d/rundeck.list
+    - name: "Installing Rundeck"
+      apt:
+        update_cache: true
+        pkg:
+        - rundeck
+        - rundeck-cli
+        state: latest
+    - name: "Update Access"
+      replace:
+       path: /etc/rundeck/rundeck-config.properties
+       regexp: "grails.serverURL=http://localhost:4440"
+       replace: "grails.serverURL = http://{{ ansible_all_ipv4_addresses[0] | string }}:4440"
+    - name: "Copy hosts file"
+      copy:
+        src: /opt/dilopez-devops/toolchain/rundeck/hosts
+        dest: /etc/ansible/hosts
+    - name: "Enable Service"
+      systemd:
+        service: rundeckd
+        enabled: true
+        state: restarted
+    - name: "Add Key-Pair"
+      openssh_keypair:
+        path: /var/lib/rundeck/.ssh/id_rsa
+        owner: rundeck
+        group: rundeck
+    - name: "Add Ansible Playbooks Project"
+      command: rd projects create -f /opt/dilopez-devops/toolchain/rundeck/project/ansible-playbooks/project.properties
+    - name: "Add Master Job"
+      command: rd jobs load -p ansible-playbooks -f /opt/dilopez-devops/toolchain/rundeck/project/ansible-playbooks/master-playbook.xml

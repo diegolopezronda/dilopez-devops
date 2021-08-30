@@ -3,3 +3,4 @@
   - import_playbook: ansible.yaml
   - import_playbook: toolchain.yaml
   - import_playbook: docker.yaml
+  - import_playbook: rundeck.yaml
