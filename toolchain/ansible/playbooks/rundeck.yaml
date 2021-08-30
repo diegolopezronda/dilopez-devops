@@ -4,6 +4,8 @@
     become: true
     environment:
       RD_URL: "http://{{ ansible_all_ipv4_addresses[0] | string }}:4440"
+      RD_USER: admin
+      RD_PASSWORD: admin
     tasks:
     - name: "Installing Java"
       apt:
@@ -46,6 +48,6 @@
         owner: rundeck
         group: rundeck
     - name: "Add Ansible Playbooks Project"
-      command: rd projects create -f /opt/dilopez-devops/toolchain/rundeck/project/ansible-playbooks/project.properties
+      command: rd projects create -p ansible-playbooks -f /opt/dilopez-devops/toolchain/rundeck/projects/ansible-playbooks/project.properties
     - name: "Add Master Job"
-      command: rd jobs load -p ansible-playbooks -f /opt/dilopez-devops/toolchain/rundeck/project/ansible-playbooks/master-playbook.xml
+      command: rd jobs load -p ansible-playbooks -f /opt/dilopez-devops/toolchain/rundeck/projects/ansible-playbooks/master-playbook.xml
