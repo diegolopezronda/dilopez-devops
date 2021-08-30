@@ -11,5 +11,6 @@
         state: latest
     - name: Clone Repository
       git:
+        force: true
         repo: https://github.com/diegolopezronda/dilopez-devops.git
         dest: /opt/dilopez-devops

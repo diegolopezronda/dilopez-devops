@@ -47,10 +47,12 @@
         path: /var/lib/rundeck/.ssh/id_rsa
         owner: rundeck
         group: rundeck
-    - name: Pause for 1 minute
-      pause:
-        minutes: 1
+    - name: "Wait for Port 4440"
+      wait_for:
+        port: 4440
     - name: "Add Ansible Playbooks Project"
       command: rd projects create -p ansible-playbooks -f /opt/dilopez-devops/toolchain/rundeck/projects/ansible-playbooks/project.properties
+      ignore_errors: yes
     - name: "Add Master Job"
       command: rd jobs load -p ansible-playbooks -f /opt/dilopez-devops/toolchain/rundeck/projects/ansible-playbooks/master-playbook.xml
+      ignore_errors: yes
