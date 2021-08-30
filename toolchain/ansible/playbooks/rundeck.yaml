@@ -47,6 +47,9 @@
         path: /var/lib/rundeck/.ssh/id_rsa
         owner: rundeck
         group: rundeck
+    - name: Pause for 1 minute
+      pause:
+        minutes: 1
     - name: "Add Ansible Playbooks Project"
       command: rd projects create -p ansible-playbooks -f /opt/dilopez-devops/toolchain/rundeck/projects/ansible-playbooks/project.properties
     - name: "Add Master Job"
