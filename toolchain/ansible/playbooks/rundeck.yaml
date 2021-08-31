@@ -3,7 +3,8 @@
     hosts: master
     become: true
     vars:
-      rundeck_url: "http://{{ ansible_all_ipv4_addresses[1] | string }}:4440"
+      domain: "{{ ansible_all_ipv4_addresses | select('match','^192.168*') | list | first}}"
+      rundeck_url: "http://{{ domain }}:4440"
     environment:
       RD_URL: "{{ rundeck_url | string }}"
       RD_USER: admin
@@ -30,11 +31,13 @@
         - rundeck
         - rundeck-cli
         state: latest
-    - name: "Update Access"
-      replace:
-       path: /etc/rundeck/rundeck-config.properties
-       regexp: "grails.serverURL=http://localhost:4440"
-       replace: "grails.serverURL = {{ rundeck_url | string }}"
+    - name: "Update Grails URL"
+      template:
+        src: /opt/dilopez-devops/toolchain/rundeck/rundeck-config.properties 
+        dest: /etc/rundeck/rundeck-config.properties
+        owner: rundeck
+        group: rundeck
+        mode: 0640
     - name: "Copy hosts file"
       copy:
         src: /opt/dilopez-devops/toolchain/rundeck/hosts
