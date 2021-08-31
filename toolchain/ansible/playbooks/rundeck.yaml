@@ -61,3 +61,6 @@
     - name: "Add Master Job"
       command: rd jobs load -p ansible-playbooks -f /opt/dilopez-devops/toolchain/rundeck/projects/ansible-playbooks/master-playbook.xml
       ignore_errors: yes
+    - name: "Please access Rundeck with admin:admin at:"
+      debug:
+        var: rundeck_url
