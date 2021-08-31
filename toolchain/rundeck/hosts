@@ -1,6 +1,6 @@
 # https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html
-localhost ansible_connection=local
 [master]
+localhost ansible_connection=local
 # YOUR MASTER NODES HERE
 
 [worker]

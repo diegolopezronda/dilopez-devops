@@ -4,3 +4,4 @@
   - import_playbook: toolchain.yaml
   - import_playbook: docker.yaml
   - import_playbook: rundeck.yaml
+  - import_playbook: nagios.yaml
