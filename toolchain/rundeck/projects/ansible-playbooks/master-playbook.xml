@@ -14,7 +14,7 @@
     <name>Master Playbook</name>
     <nodeFilterEditable>false</nodeFilterEditable>
     <nodefilters>
-      <filter>label:master</filter>
+      <filter>tags:master</filter>
     </nodefilters>
     <nodesSelectedByDefault>true</nodesSelectedByDefault>
     <plugins />

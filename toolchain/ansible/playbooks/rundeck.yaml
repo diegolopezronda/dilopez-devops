@@ -2,8 +2,10 @@
   - name: "Install Rundeck"
     hosts: master
     become: true
+    vars:
+      rundeck_url: "http://{{ ansible_all_ipv4_addresses[1] | string }}:4440"
     environment:
-      RD_URL: "http://{{ ansible_all_ipv4_addresses[0] | string }}:4440"
+      RD_URL: "{{ rundeck_url | string }}"
       RD_USER: admin
       RD_PASSWORD: admin
     tasks:
@@ -32,7 +34,7 @@
       replace:
        path: /etc/rundeck/rundeck-config.properties
        regexp: "grails.serverURL=http://localhost:4440"
-       replace: "grails.serverURL = http://{{ ansible_all_ipv4_addresses[0] | string }}:4440"
+       replace: "grails.serverURL = {{ rundeck_url | string }}"
     - name: "Copy hosts file"
       copy:
         src: /opt/dilopez-devops/toolchain/rundeck/hosts

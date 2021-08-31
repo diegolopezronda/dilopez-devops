@@ -1,16 +1,19 @@
 # https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html
-# List of master nodes
 localhost ansible_connection=local
 [master]
-# Localhost connects with itself without using SSH
+# YOUR MASTER NODES HERE
+
+[worker]
+# YOUR WORKER NODES HERE
 
 # This configuration applies to all nodes.
-[master:vars]
-# This is the key to access the nodes
+[all:vars]
+ansible_connection=ssh
 # Be sure the public key is listed on ~/.ssh/authorized_keys on the target nodes
 ansible_ssh_private_key_file=/var/lib/rundeck/.ssh/id_rsa
 # https://docs.ansible.com/ansible/latest/reference_appendices/interpreter_discovery.html
 # We prefer using python3 on the target nodes
 ansible_python_interpreter=/usr/bin/python3
+# https://docs.ansible.com/ansible/lastest/user_guide/intro_getting_started.html#host-key-checking
 # Does not check the host
 ansible_ssh_extra_args='-o StrictHostKeyChecking=no'
