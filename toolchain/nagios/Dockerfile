@@ -1,5 +1,10 @@
 FROM ubuntu:focal
-USER root 
-RUN apt update && apt upgrade && apt install -y nagios4 nagios-plugins nagios-nrpe-plugin
-EXPOSE 80
-CMD [ "/usr/local/bin/start_nagios" ]
+USER root
+RUN \
+  apt update && \
+  apt upgrade && \
+  DEBIAN_FRONTEND=noninteractive apt install -y \
+    nagios4 \
+    monitoring-plugins \
+    nagios-nrpe-plugin
+CMD /usr/sbin/nagios4 /etc/nagios4/nagios.cfg

@@ -7,14 +7,14 @@
       docker_image:
         name: dilopez_nagios:1.0.0
         build:
-          path: ../../nagios/Dockerfile
-          source: build
+          path: /opt/dilopez-devops/toolchain/nagios
+        source: build
         state: present
     - name: "Run Docker container"
       docker_container:
         name: nagios
         image: dilopez_nagios:1.0.0
         state: started
-        ports:
-        - "8081:80"
         detach: true
+        volumes:
+        - nagios:/etc/nagios4
